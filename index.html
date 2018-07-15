@@ -20,51 +20,142 @@
     <div class="container">
 
         <div class="row" style="margin-top: 5%">
-            <div class="five columns">
+            <div class="six columns">
 
                 <h4>
                     <img src="images/favicon.png">Thirsty Kids</h4>
             </div>
-            <div class="five columns">
+            <div class="six columns">
                 <p style="text-align: right">To calculate fluids for kids.</p>
             </div>
         </div>
+        <div id="patientInputDiv">
+            <div class="row">
 
-        <div class="row">
+                <div class="three columns">
+                    <label for="bodyWeight">kg</label>
+                    <input class="u-full-width" type="number" placeholder="Weight" id="bodyWeight">
+                </div>
+                <div class="three columns">
+                    <label for="dehydration">% BW</label>
+                    <input class="u-full-width" type="number" placeholder="Dehydration" id="dehydration">
+                </div>
 
-            <div class="three columns">
-                <label for="bodyWeight">kg</label>
-                <input class="u-full-width" type="number" placeholder="Weight" id="bodyWeight">
+                <div style="display: none">
+                    <div class="three columns">
+                        <label for="sodium">Na+ (mmol/L)</label>
+                        <input class="u-full-width" type="number" placeholder="sodium level (optional)" id="sodium">
+                    </div>
+
+                    <div class="three columns">
+                        <label for="potassium">K+ (mmol/L)</label>
+                        <input class="u-full-width" type="number" placeholder="potassium level (optional)" id="potassium">
+                    </div>
+                </div>
+
             </div>
-            <div class="three columns">
-                <label for="dehydration">% BW</label>
-                <input class="u-full-width" type="number" placeholder="Dehydration" id="dehydration">
+
+            <div class="row">
+                <div class="six columns">
+                    <label for="bolusGiven">bolus given (mL) (usually NS 10-20ml/kg)</label>
+                    <input class="u-full-width" type="number" placeholder="Bolus Given" id="bolusVol">
+                </div>
             </div>
 
-            <div class="two columns">
-                <label for="sodium">Na+</label>
-                <input class="u-full-width" type="number" placeholder="sodium level (optional)" id="sodium">
-            </div>
+            <div class="row">
+                <div class="ten columns">
+                    <input class="button-primary" type="submit" value="calculate requirements" id="submitBtn">
+                </div>
 
-            <div class="two columns">
-                <label for="potassium">K+</label>
-                <input class="u-full-width" type="number" placeholder="potassium level (optional)" id="potassium">
             </div>
-
         </div>
 
         <div class="row">
-            <div class="two columns">
-                &nbsp;
-            </div>
-            <div class="eight columns">
-                <input class="button-primary" type="submit" value="suggest fluids" id="submitBtn">
-            </div>
-
+            <p>Infusion rate is <strong id="infusionRate">?</strong> mm/L</p>    
         </div>
-
-        <div class="row" id="output">&nbsp;
-            <!-- <p>Fluid maintenance (ml/day) = %maintanencePerDay%<br>Infusion Rate (ml/hr) = %infusionRate%</p>  -->
+        
+        <div class="row">
+            <table id="requirement">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>H2O (mL)</th>
+                        <th>Na+ (mmol/L)</th>
+                        <th>K+ (mmol/L)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Maintenance</strong>
+                        </td>
+                        <td>
+                            <strong id="maintenanceWater">?</strong> mL
+                            <br>100/50/20 rule</td>
+                        <td>
+                            <strong id="maintenanceSodium">?</strong> mmol
+                            <br>3mmol/kg/day</td>
+                        <td>
+                            <strong id="maintenancePotassium">?</strong> mmol
+                            <br>2mmol/kg/day</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Deficit</strong>
+                        </td>
+                        <td>
+                            <strong id="deficitWater">?</strong> mL
+                            <br>BW x %dehydration x 10</td>
+                        <td>
+                            <strong id="deficitSodium">?</strong> mmol
+                            <br>84mmol/L deficit</td>
+                        <td>
+                            <strong id="deficitPotassium">?</strong> mmol
+                            <br>60mmol/L deficit</td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td>
+                            <strong>additional Na+</strong>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Free Water Deficit</strong>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    -->
+                    <tr>
+                        <td>
+                            <strong>NS Bolus Given</strong>
+                        </td>
+                        <td>
+                            <strong id="bolusWater">?</strong> mL
+                            <br>(usually 10-20mL/kg)</td>
+                        <td>
+                            <strong id="bolusSodium">?</strong> mmol</td>
+                        <td>&nbsp;</td>
+                        <!--<strong id="bolusPotassium">?</strong> mmol-->
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Total</strong>
+                        </td>
+                        <td>
+                            <strong id="totalWater">?</strong> mL</td>
+                        <td>
+                            <strong id="totalSodium">?</strong> mmoL</td>
+                        <td>
+                            <strong id="totalPotassium">?</strong> mmoL</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="row">
