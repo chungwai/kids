@@ -25,13 +25,17 @@ var fluidController = (function () {
     return {
         
         initFluids: function () {
-            var fluid1 = new Fluid('D5 + 1/2 NS', 'maintanence', 50, 77, 0);
-            data.fluids.push(fluid1);
-            var fluid2 = new Fluid('D5 + 1/2 NS + 20mmol/L KCl', 'maintanence', 50, 77, 20);
-            data.fluids.push(fluid2);
-            var fluid3 = new Fluid('3.3% Dextrose + 0.3% NaCl (2/3 and 1/3)', 'maintanence', 33, 51, 0);
-            data.fluids.push(fluid3);
-            console.log(data.fluids);
+            var fluid;
+            var createFluid = function (...arg) {
+                fluid = new Fluid(...arg);
+                data.fluids.push(fluid);
+            };
+            createFluid('D5 + 1/2 NS', 'maintanence', 50, 77, 0);
+            createFluid('D5 + ½ NS + 20mmol/L KCl', 'maintanence', 50, 77, 20);
+            createFluid('3.3% Dextrose + 0.3% NaCl (⅔ and ⅓)', 'maintanence', 33, 51, 0);
+            createFluid('0.18% NaCl/4% Dextrose', 'maintanence', 40, 31, 0);
+            createFluid('½:½', 'maintanence', 25, 77, 0);
+            createFluid('5.85% NaCl', 'supplement', 0, 1001, 0);
         },
         getFluids: function () {
             return data.fluids;
