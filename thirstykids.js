@@ -60,7 +60,6 @@ var fluidController = (function () {
             createFluid('D5 + ½ NS', 'maintanence', 50, 77, 0);
             createFluid('D5 + ½ NS + 40mmol/L KCl', 'maintanence', 50, 77, 40);
             createFluid('⅓solution (3.3% Dextrose + 0.3% NaCl)', 'maintanence', 33, 51, 0);
-            createFluid('0.18% NaCl/4% Dextrose', 'maintanence', 40, 31, 0);
             createFluid('½:½', 'maintanence', 25, 77, 0);
             createFluid('5.85% NaCl', 'supplement', 0, 1001, 0);
             createFluid('1/5 solution: NaCl 0.18% + Dextrose 4.3%', 'maintanence', 43, 31, 0);
