@@ -1,21 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>HTML Tutorial</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
-    <script src="script.js"></script>
+
+    <meta charset="utf-8">
+    <title>Thirsty Kids</title>
+    <meta name="description" content="Calculate FLUIDS for crying kids">
+    <meta name="author" content="Dr. Wong Chung Wai, William">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
 </head>
 
 <body>
-    <div class="navbar">
-    </div>
-    <h1>This is a heading</h1>
-    <p>This is a paragraph.</p>
-    <button onclick="runCode()">Click Me</button>
 
+    <div class="container">
+
+        <div class="row" style="margin-top: 5%">
+            <div class="five columns">
+
+                <h4>
+                    <img src="images/favicon.png">Thirsty Kids</h4>
+            </div>
+            <div class="five columns">
+                <p style="text-align: right">To calculate fluids for kids.</p>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="three columns">
+                <label for="bodyWeight">kg</label>
+                <input class="u-full-width" type="number" placeholder="Weight" id="bodyWeight">
+            </div>
+            <div class="three columns">
+                <label for="dehydration">% BW</label>
+                <input class="u-full-width" type="number" placeholder="Dehydration" id="dehydration">
+            </div>
+
+            <div class="two columns">
+                <label for="sodium">Na+</label>
+                <input class="u-full-width" type="number" placeholder="sodium level (optional)" id="sodium">
+            </div>
+
+            <div class="two columns">
+                <label for="potassium">K+</label>
+                <input class="u-full-width" type="number" placeholder="potassium level (optional)" id="potassium">
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="two columns">
+                &nbsp;
+            </div>
+            <div class="eight columns">
+                <input class="button-primary" type="submit" value="suggest fluids" id="submitBtn">
+            </div>
+
+        </div>
+
+        <div class="row" id="output">&nbsp;
+            <!-- <p>Fluid maintenance (ml/day) = %maintanencePerDay%<br>Infusion Rate (ml/hr) = %infusionRate%</p>  -->
+        </div>
+
+        <div class="row">
+            <table id="fluidsTable">
+                <thead>
+                    <tr>
+                        <th>Fluid</th>
+                        <th>Dextrose (g/L)</th>
+                        <th>Na+ (mmol/L)</th>
+                        <th>K+ (mmol/L)</th>
+                        <th>Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>William's Fluid</td>
+                        <td>60</td>
+                        <td>50</td>
+                        <td>20</td>
+                        <td>Maintanence</td>
+                    </tr>
+                    <tr>
+                        <td>Chung Wai Solution</td>
+                        <td>70</td>
+                        <td>20</td>
+                        <td>10</td>
+                        <td>Resuscitation</td>
+                    </tr>
+                    <tr>
+                        <td>PYNEH liquid</td>
+                        <td>10</td>
+                        <td>10</td>
+                        <td>40</td>
+                        <td>Supplement</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+
+
+    <script src="thirstykids.js"></script>
 </body>
 
 </html>
