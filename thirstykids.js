@@ -1,5 +1,13 @@
 "use strict";
 
+var myMath = (function () {
+    return {
+        round: function (num, decimal) {
+            return Math.round((num + 0.00001) * Math.pow(10, decimal)) / Math.pow(10, decimal);
+        }
+    }
+}());
+
 var fluidController = (function () {
 
     var data = {
@@ -47,7 +55,8 @@ var fluidController = (function () {
             data.dehydration = 0;
             data.sodiumLevel = -1;
             data.potassiumLevel = -1;
-            //data.maintanencePerDay = -1;
+            data.maintanence.water = 0;
+            data.bolus.water = 0;
             data.infusionRate = -1;
         },
 
@@ -136,6 +145,12 @@ var UIController = (function () {
         infusionRate: document.getElementById('infusionRate'),
         patientInput: document.getElementById('patientInputDiv'),
 
+        requirementResult: document.getElementById('requirementResult'),
+        requirementError: document.getElementById('requirementError'),
+        deficitRow: document.getElementById('deficitRow'),
+        bolusRow: document.getElementById('bolusRow'),
+        totalRow: document.getElementById('totalRow'),
+
 
         maintanence: {
             water: document.getElementById('maintenanceWater'),
@@ -184,18 +199,18 @@ var UIController = (function () {
 
         writeResults: function () {
             var results = fluidController.getResults();
-            DOMobj.maintanence.water.innerHTML = results.maintanence.water;
-            DOMobj.maintanence.sodium.innerHTML = results.maintanence.sodium;
-            DOMobj.maintanence.potassium.innerHTML = results.maintanence.potassium;
-            DOMobj.deficit.water.innerHTML = results.deficit.water;
-            DOMobj.deficit.sodium.innerHTML = results.deficit.sodium;
-            DOMobj.deficit.potassium.innerHTML = results.deficit.potassium;
-            DOMobj.bolus.water.innerHTML = results.bolus.water;
-            DOMobj.bolus.sodium.innerHTML = results.bolus.sodium;
-            DOMobj.total.water.innerHTML = results.total.water;
-            DOMobj.total.sodium.innerHTML = results.total.sodium;
-            DOMobj.total.potassium.innerHTML = results.total.potassium;
-            DOMobj.infusionRate.innerHTML = Math.round(results.infusionRate);
+            DOMobj.maintanence.water.innerHTML = myMath.round(results.maintanence.water, 1);
+            DOMobj.maintanence.sodium.innerHTML = myMath.round(results.maintanence.sodium, 1);
+            DOMobj.maintanence.potassium.innerHTML = myMath.round(results.maintanence.potassium, 1);
+            DOMobj.deficit.water.innerHTML = myMath.round(results.deficit.water, 1);
+            DOMobj.deficit.sodium.innerHTML = myMath.round(results.deficit.sodium, 1);
+            DOMobj.deficit.potassium.innerHTML = myMath.round(results.deficit.potassium, 1);
+            DOMobj.bolus.water.innerHTML = myMath.round(results.bolus.water, 1);
+            DOMobj.bolus.sodium.innerHTML = myMath.round(results.bolus.sodium, 1);
+            DOMobj.total.water.innerHTML = myMath.round(results.total.water, 1);
+            DOMobj.total.sodium.innerHTML = myMath.round(results.total.sodium, 1);
+            DOMobj.total.potassium.innerHTML = myMath.round(results.total.potassium, 1);
+            DOMobj.infusionRate.innerHTML = myMath.round(results.infusionRate, 0);
 
             /* 
             var output;
@@ -208,15 +223,62 @@ var UIController = (function () {
         },
 
 
-
         getInput: function () {
-            return {
-                weight: parseFloat(DOMobj.bodyWeight.value),
-                dehydration: parseFloat(DOMobj.dehydration.value),
-                sodiumLevel: parseFloat(DOMobj.sodiumLevel.value),
-                potassiumLevel: parseFloat(DOMobj.potassiumLevel.value),
-                bolusVol: parseFloat(DOMobj.bolusVol.value),
+            var validated = true;
+            var errorMsg = new Array();
+            var weight, dehydration, sodiumLevel, potassiumLevel, bolusVol;
+
+            var inputToNum = function (input, min, max, allowEqual, optional, varName, defaultValue) {
+                if (optional && input == '') {
+                    return defaultValue;
+                } else if (isNaN(parseFloat(input))) {
+                    errorMsg.push(varName + ' has to be a number');
+                } else if (allowEqual && (parseFloat(input) < min || parseFloat(input) > max)) {
+                    errorMsg.push('Please make sure ' + min + ' <= ' + varName + ' <= ' + max);
+                } else if (!allowEqual && (parseFloat(input) <= min || parseFloat(input) >= max)) {
+                    errorMsg.push('Please make sure ' + min + ' < ' + varName + ' < ' + max);
+                } else {
+                    return parseFloat(input);
+                }
+                return defaultValue;
             };
+
+            weight = inputToNum(DOMobj.bodyWeight.value, 0, 60, false, false, 'Weight', 0);
+            dehydration = inputToNum(DOMobj.dehydration.value, 0, 30, true, true, '%Dehydration', 0);
+            sodiumLevel = inputToNum(DOMobj.sodiumLevel.value, 100, 180, true, true, 'Sodium level', 0);
+            potassiumLevel = inputToNum(DOMobj.potassiumLevel.value, 1, 8, true, true, 'Potassium level', 0);
+            bolusVol = inputToNum(DOMobj.bolusVol.value, 0, 2500, true, true, 'Bolus Volume', 0);
+
+            //console.log(DOMobj.dehydration.value);
+            //console.log(isInputValid(DOMobj.dehydration.value, 0, 40, true, true));
+            //console.log(valueIsNaN(DOMobj.dehydration.value));
+            //console.log(isNaN(DOMobj.dehydration.value));
+            //console.log(DOMobj.dehydration.value > 0);
+            return {
+                errorMsg, weight, dehydration, sodiumLevel, potassiumLevel, bolusVol
+            };
+        },
+
+        visibilityCtrl: function (errorMsg, dehydration, bolusVol) {
+            console.log(errorMsg.length);
+            var errorHTMLstring;
+            if (errorMsg.length >= 1) {
+                errorHTMLstring = 'Errors:<ul>';
+                errorMsg.forEach(function (e) {
+                    errorHTMLstring += ('<li>' + e + '</li>');
+                });
+                errorHTMLstring += '</ul>';
+                console.log(errorHTMLstring);
+                DOMobj.requirementResult.classList.add('inactive');
+                DOMobj.requirementError.classList.remove('inactive');
+                DOMobj.requirementError.innerHTML = errorHTMLstring;
+            } else {
+                DOMobj.requirementResult.classList.remove('inactive');
+                DOMobj.requirementError.classList.add('inactive');
+            }
+            (dehydration === 0) ? DOMobj.deficitRow.classList.add('inactive') : DOMobj.deficitRow.classList.remove('inactive');
+            (bolusVol === 0) ? DOMobj.bolusRow.classList.add('inactive') : DOMobj.bolusRow.classList.remove('inactive');
+            ((dehydration === 0) && (bolusVol === 0)) ? DOMobj.totalRow.classList.add('inactive') : DOMobj.totalRow.classList.remove('inactive');
         },
     }
 
@@ -225,11 +287,14 @@ var UIController = (function () {
 
 
 var controller = (function (fluidCtrl, UICtrl) {
+    //var firstRunRequirement = true;
     var DOMobj = UIController.getDOMobj();
 
-    var outputRequirements = function () {
+    var outputRequirement = function () {
         fluidController.initVar();
         var input = UIController.getInput();
+
+        UIController.visibilityCtrl(input.errorMsg, input.dehydration, input.bolusVol);
 
         fluidController.setInput(input);
         fluidController.calcMaintanence();
@@ -242,7 +307,7 @@ var controller = (function (fluidCtrl, UICtrl) {
     };
 
     var setupEventListerners = function () {
-        DOMobj.submitBtn.addEventListener('click', outputRequirements);
+        DOMobj.submitBtn.addEventListener('click', outputRequirement);
         //DOMobj.patientInput.addEventListener('keypress', calculateNeeds);
     }
 
